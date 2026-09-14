@@ -1,0 +1,25 @@
+services:
+  juice-shop:
+    image: bkimminich/juice-shop:latest
+    platform: linux/amd64 # requerido en Mac ARM (M4); en Linux amd64 es no-op
+    ports:
+      - "${JUICE_PORT:-3000}:3000"
+    networks: [lab-net]
+    restart: unless-stopped
+
+  waap-proxy:
+    image: owasp/modsecurity-crs:nginx
+    platform: linux/amd64
+    ports:
+      - "${WAAP_PORT:-8080}:8080"
+    environment:
+      PARANOIA: ${PARANOIA:-1} # PDF Fase 2: iniciar en PL1
+      BACKEND: http://juice-shop:3000
+      PORT: "8080"
+    depends_on: [juice-shop]
+    networks: [lab-net]
+    restart: unless-stopped
+
+networks:
+  lab-net:
+    driver: bridge

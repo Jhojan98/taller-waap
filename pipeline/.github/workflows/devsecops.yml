@@ -1,0 +1,8 @@
+name: devsecops-pipeline # Placeholder Fase 5 (PDF p.14). Pipeline real en Fase 5.
+on: [push, pull_request]
+jobs:
+  security-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "TODO Fase 5: Semgrep, pip-audit, Trivy, Checkov, ZAP"
