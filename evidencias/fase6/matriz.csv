@@ -1,0 +1,10 @@
+Payload / tecnica,Bloqueado por reglas (Fase 2),Detectado por IA/ML (Fase 3),Bloqueado por RASP (Fase 4)
+SQLi clasico ' OR '1'='1,BLOQUEA,SI,EVADE
+SQLi encoded,BLOQUEA,SI,EVADE
+SQLi comentarios /**/,EVADE,SI,BLOQUEA
+SQLi fragmentado 2 params,EVADE,SI,BLOQUEA
+SQLi UNION login,BLOQUEA,SI,BLOQUEA
+SQLi clasico login,BLOQUEA,SI,BLOQUEA
+XSS basico,BLOQUEA,SI,EVADE
+XSS encoded,BLOQUEA,SI,EVADE
+Traversal ../../etc/passwd,BLOQUEA,SI,EVADE

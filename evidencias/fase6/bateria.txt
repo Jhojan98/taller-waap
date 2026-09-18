@@ -1,0 +1,10 @@
+SQLi clasico ' OR '1'='1         | CRS:BLOQUEA | ML: SI | RASP:EVADE
+SQLi encoded                     | CRS:BLOQUEA | ML: SI | RASP:EVADE
+SQLi comentarios /**/            | CRS:  EVADE | ML: SI | RASP:BLOQUEA
+SQLi fragmentado 2 params        | CRS:  EVADE | ML: SI | RASP:BLOQUEA
+SQLi UNION login                 | CRS:BLOQUEA | ML: SI | RASP:BLOQUEA
+SQLi clasico login               | CRS:BLOQUEA | ML: SI | RASP:BLOQUEA
+XSS basico                       | CRS:BLOQUEA | ML: SI | RASP:EVADE
+XSS encoded                      | CRS:BLOQUEA | ML: SI | RASP:EVADE
+Traversal ../../etc/passwd       | CRS:BLOQUEA | ML: SI | RASP:EVADE
+OK evidencias/fase6/matriz.csv

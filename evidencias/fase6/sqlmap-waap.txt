@@ -1,0 +1,25 @@
+[18:35:37] [WARNING] the web server responded with an HTTP error code (403) which could interfere with the results of the tests
+[18:35:37] [INFO] checking if the target is protected by some kind of WAF/IPS
+[18:35:37] [INFO] testing if the target URL content is stable
+[18:35:38] [INFO] target URL content is stable
+[18:35:38] [INFO] testing if GET parameter 'q' is dynamic
+[18:35:38] [WARNING] GET parameter 'q' does not appear to be dynamic
+[18:35:38] [WARNING] heuristic (basic) test shows that GET parameter 'q' might not be injectable
+[18:35:38] [INFO] testing for SQL injection on GET parameter 'q'
+[18:35:38] [INFO] testing 'AND boolean-based blind - WHERE or HAVING clause'
+[18:35:38] [INFO] testing 'Boolean-based blind - Parameter replace (original value)'
+[18:35:38] [INFO] testing 'MySQL >= 5.1 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (EXTRACTVALUE)'
+[18:35:38] [INFO] testing 'PostgreSQL AND error-based - WHERE or HAVING clause'
+[18:35:38] [INFO] testing 'Microsoft SQL Server/Sybase AND error-based - WHERE or HAVING clause (IN)'
+[18:35:38] [INFO] testing 'Oracle AND error-based - WHERE or HAVING clause (XMLType)'
+it is recommended to perform only basic UNION tests if there is not at least one other (potential) technique found. Do you want to reduce the number of requests? [Y/n] Y
+[18:35:39] [INFO] testing 'Generic UNION query (NULL) - 1 to 10 columns'
+[18:35:39] [WARNING] GET parameter 'q' does not seem to be injectable
+[18:35:39] [ERROR] all tested parameters do not appear to be injectable. Try to increase values for '--level'/'--risk' options if you wish to perform more tests. Rerun without providing the option '--technique'. If you suspect that there is some kind of protection mechanism involved (e.g. WAF) maybe you could try to use option '--tamper' (e.g. '--tamper=space2comment') and/or switch '--random-agent', skipping to the next target
+[18:35:39] [WARNING] HTTP error codes detected during run:
+403 (Forbidden) - 42 times
+[18:35:39] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/home/jhojan/.local/share/sqlmap/output/results-09182026_0635pm.csv'
+[18:35:39] [WARNING] your sqlmap version is outdated
+
+[*] ending @ 18:35:39 /2026-09-18/
+

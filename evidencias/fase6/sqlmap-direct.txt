@@ -1,0 +1,12 @@
+[18:35:56] [INFO] testing 'Oracle AND error-based - WHERE or HAVING clause (XMLType)'
+it is recommended to perform only basic UNION tests if there is not at least one other (potential) technique found. Do you want to reduce the number of requests? [Y/n] Y
+[18:35:56] [INFO] testing 'Generic UNION query (NULL) - 1 to 10 columns'
+[18:35:56] [WARNING] GET parameter 'q' does not seem to be injectable
+[18:35:56] [ERROR] all tested parameters do not appear to be injectable. Try to increase values for '--level'/'--risk' options if you wish to perform more tests. Rerun without providing the option '--technique'. If you suspect that there is some kind of protection mechanism involved (e.g. WAF) maybe you could try to use option '--tamper' (e.g. '--tamper=space2comment') and/or switch '--random-agent', skipping to the next target
+[18:35:56] [WARNING] HTTP error codes detected during run:
+403 (Forbidden) - 14 times, 500 (Internal Server Error) - 8 times
+[18:35:56] [INFO] you can find results of scanning in multiple targets mode inside the CSV file '/home/jhojan/.local/share/sqlmap/output/results-09182026_0635pm.csv'
+[18:35:56] [WARNING] your sqlmap version is outdated
+
+[*] ending @ 18:35:56 /2026-09-18/
+

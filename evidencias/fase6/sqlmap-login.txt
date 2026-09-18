@@ -1,0 +1,8 @@
+[18:40:04] [WARNING] the web server responded with an HTTP error code (403) which could interfere with the results of the tests
+[18:40:04] [INFO] checking if the target is protected by some kind of WAF/IPS
+[18:40:04] [INFO] testing if (custom) POST parameter 'JSON email' is dynamic
+[18:40:05] [WARNING] (custom) POST parameter 'JSON email' does not appear to be dynamic
+[18:40:05] [WARNING] heuristic (basic) test shows that (custom) POST parameter 'JSON email' might not be injectable
+[18:40:05] [INFO] testing for SQL injection on (custom) POST parameter 'JSON email'
+[18:40:05] [WARNING] (custom) POST parameter 'JSON email' does not seem to be injectable
+[18:40:05] [INFO] testing if (custom) POST parameter 'JSON password' is dynamic

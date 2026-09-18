@@ -1,0 +1,6 @@
+ • Findings: 2 (2 blocking)
+│ 2 Code Findings │
+    ❯❱ javascript.express.security.audit.xss.direct-response-write.direct-response-write
+           84┆ app.get("/debug", (req, res) => { res.send(eval(req.query.cmd)); });
+   ❯❯❱ javascript.lang.security.audit.code-string-concat.code-string-concat
+          Found data from an Express or Next web request flowing to `eval`. If this data is user-controllable
