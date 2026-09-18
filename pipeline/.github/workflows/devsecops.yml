@@ -1,8 +1,199 @@
-name: devsecops-pipeline # Placeholder Fase 5 (PDF p.14). Pipeline real en Fase 5.
-on: [push, pull_request]
+name: devsecops-pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  PYTHON_VERSION: '3.10'
+  IMAGE_EDGE: owasp/modsecurity-crs:nginx
+  IMAGE_TARGET: bkimminich/juice-shop:latest
+
 jobs:
-  security-gate:
+  sast:
+    name: SAST - Semgrep
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-      - run: echo "TODO Fase 5: Semgrep, pip-audit, Trivy, Checkov, ZAP"
+      - name: Scan codigo propio (OWASP Top Ten)
+        run: |
+          docker run --rm -v "${PWD}:/src" returntocorp/semgrep \
+            semgrep --config p/owasp-top-ten --metrics off --error \
+            app waap scripts
+
+  sca:
+    name: SCA - pip-audit + npm audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: pip-audit (dependencias IA/ML)
+        run: |
+          pip install --quiet pip-audit
+          pip-audit -r waap/ml/requirements.txt --desc on
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: npm audit (demo RASP)
+        run: |
+          npm install --package-lock-only --ignore-scripts
+          npm audit --omit=dev
+        working-directory: app/rasp-demo
+
+  iac:
+    name: IaC - Checkov
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Checkov (compose + acciones GHA)
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: .
+          output_format: cli
+          soft_fail: false
+
+  container-scan:
+    name: Trivy - contenedores
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Trivy filesystem (repo, gate CRITICAL)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          scan-ref: .
+          format: sarif
+          output: trivy-fs.sarif
+          exit-code: '1'
+          severity: CRITICAL
+          ignore-unfixed: true
+      - name: Trivy imagen borde WAF (gate CRITICAL)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: image
+          image-ref: ${{ env.IMAGE_EDGE }}
+          format: sarif
+          output: trivy-edge.sarif
+          exit-code: '1'
+          severity: CRITICAL
+          ignore-unfixed: true
+      - name: Trivy imagen objetivo (reporte, no gate; target deliberadamente vulnerable)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: image
+          image-ref: ${{ env.IMAGE_TARGET }}
+          format: table
+          output: trivy-target.txt
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: trivy-reports
+          path: |
+            trivy-*.sarif
+            trivy-target.txt
+          if-no-files-found: warn
+
+  ml:
+    name: IA/ML - entrenar y validar modelo
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Instalar dependencias
+        run: pip install --quiet -r waap/ml/requirements.txt
+      - name: Extraer caracteristicas (Fase 3.2)
+        run: python waap/ml/extract_features.py logs/access_normal.jsonl logs/features_normal_traffic.csv
+      - name: Entrenar modelo (Fase 3.3)
+        run: python waap/ml/train_model.py logs/features_normal_traffic.csv waap/ml/model.pkl
+      - name: Evaluar matriz + rafaga (Fase 3.4, evidencia)
+        run: python waap/ml/evaluate.py
+      - name: Gate de deteccion de anomalias
+        run: |
+          python - <<'PY'
+          import sys
+          sys.path.insert(0, 'waap/ml')
+          from score_request import score_request
+          assert score_request("/rest/products/search?q=<script>alert(1)</script>", "") < -0.05, 'XSS no detectado'
+          assert score_request("/rest/products/search?q=%27%20OR%20%271%27%3D%271", "") < -0.05, 'SQLi encoded no detectado'
+          assert score_request('/rest/products/search?q=apple', '') >= -0.05, 'trafico normal marcado anomalo'
+          print('gate ML OK')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: modelo-ia-ml
+          path: waap/ml/model.pkl
+          if-no-files-found: error
+
+  attack-tests:
+    name: Pruebas de ataque - curl + sqlmap + ZAP
+    runs-on: ubuntu-latest
+    needs: [sast, sca, iac, container-scan]
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Levantar stack (WAF + Juice Shop)
+        run: |
+          docker compose up -d --wait
+          curl -fsS --retry 30 --retry-delay 3 --retry-all-errors http://localhost:8080/ >/dev/null
+      - name: Baseline trafico normal (esperado 200)
+        run: |
+          code=$(curl -s -o /dev/null -w '%{http_code}' 'http://localhost:8080/rest/products/search?q=apple')
+          test "$code" = "200" || { echo "fallo: code=$code (se esperaba 200)"; exit 1; }
+      - name: WAF bloquea SQLi (esperado 403/406)
+        run: |
+          code=$(curl -s -o /dev/null -w '%{http_code}' "http://localhost:8080/rest/products/search?q=%27%20OR%20%271%27=%271")
+          test "$code" = "403" -o "$code" = "406" || { echo "fallo: code=$code (se esperaba bloqueo)"; exit 1; }
+      - name: sqlmap smoke test
+        run: |
+          pip install --quiet sqlmap
+          sqlmap -u 'http://localhost:8080/rest/products/search?q=apple' \
+            --batch --level 1 --risk 1 --timeout 20 --flush-session \
+            --output-dir=/tmp/sqlmap-out 2>&1 | tee /tmp/sqlmap-run.log
+      - name: ZAP baseline scan
+        run: |
+          mkdir -p artifacts/zap
+          docker run --rm --network host --user root \
+            -v "${PWD}/artifacts/zap:/zap/wrk" \
+            ghcr.io/zaproxy/zaproxy zap-baseline.py \
+            -t http://localhost:8080 -l WARN \
+            -r /zap/wrk/waap-report.html -J /zap/wrk/waap-report.json \
+            > artifacts/zap/zap-baseline.log 2>&1 || true
+      - name: Recolectar logs y evidencias
+        run: |
+          mkdir -p artifacts/logs artifacts/reports
+          docker compose logs --no-color > artifacts/logs/stack.log 2>&1 || true
+          docker compose ps > artifacts/reports/stack-ps.txt 2>&1 || true
+          test -d /tmp/sqlmap-out && cp -r /tmp/sqlmap-out artifacts/reports/ || true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: attack-test-evidencias
+          path: artifacts/
+          if-no-files-found: warn
+
+  deploy:
+    name: Despliegue de reglas WAAP
+    runs-on: ubuntu-latest
+    needs: [attack-tests, ml]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Aplicar reglas (security gate superado)
+        run: bash scripts/deploy_waap_rules.sh

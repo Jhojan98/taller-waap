@@ -39,4 +39,5 @@ def rasp_guard_query(query_builder_func):
 def build_login_query(username, password):
     # Ejemplo deliberadamente vulnerable a nivel de construccion de la
     # consulta; el RASP intercepta el resultado final antes de ejecutarlo.
-    return f"SELECT * FROM users WHERE user='{username}' AND pass='{password}'"
+    # nosemgrep - hallazgo intencional del demo RASP (Fase 4): se bloquea en runtime.
+    return f"SELECT * FROM users WHERE user='{username}' AND pass='{password}'"  # nosemgrep

@@ -22,7 +22,8 @@ const USERS = [
 
 function buildLoginQuery(username, password) {
   // Construccion deliberadamente vulnerable (igual que el ejemplo del PDF).
-  return `SELECT * FROM users WHERE user='${username}' AND pass='${password}'`;
+  // nosemgrep - hallazgo intencional del demo RASP (Fase 4): se bloquea en runtime.
+  return `SELECT * FROM users WHERE user='${username}' AND pass='${password}'`; // nosemgrep
 }
 
 // Decorador RASP: envuelve la construccion real de la consulta, con visibilidad
