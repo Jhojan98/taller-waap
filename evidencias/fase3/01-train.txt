@@ -1,0 +1,1 @@
+Modelo entrenado y guardado en waap/ml/model.pkl (120 muestras)

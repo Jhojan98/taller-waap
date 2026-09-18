@@ -1,0 +1,2 @@
+umbral -0.05: TP=2/5 FN=3/5 FP=2/5 TN=3/5  deteccion=40% FPR=40%
+umbral +0.00: TP=5/5 FN=0/5 FP=4/5 TN=1/5  deteccion=100% FPR=80%
