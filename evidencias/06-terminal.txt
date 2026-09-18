@@ -1,0 +1,23 @@
+===== docker compose ps =====
+NAME                       IMAGE                          COMMAND                  SERVICE      CREATED          STATUS                    PORTS
+taller-waap-juice-shop-1   bkimminich/juice-shop:latest   "/nodejs/bin/node /j…"   juice-shop   32 minutes ago   Up 32 minutes             0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp
+taller-waap-waap-proxy-1   owasp/modsecurity-crs:nginx    "/docker-entrypoint.…"   waap-proxy   32 minutes ago   Up 32 minutes (healthy)   0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp
+
+===== curl códigos =====
+HOME via WAAP 8080: 200
+search normal: 200
+sqli clasico: 403
+evasion fragmentada: 200
+
+===== WAAP env =====
+PARANOIA=1
+BACKEND=http://juice-shop:3000
+MODSEC_DISABLE_BACKEND_COMPRESSION=Off
+BLOCKING_PARANOIA=1
+
+===== regla CRS (bloqueo) =====
+     34 "ruleId":"949110"
+     34 "message":"Inbound Anomaly Score Exceeded (Total Score: 5)"
+     33 "message":"Request content type is not allowed by policy"
+      1 "ruleId":"942100"
+      1 "message":"SQL Injection Attack Detected via libinjection"

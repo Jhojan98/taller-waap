@@ -5,3 +5,6 @@ logs/*.csv
 __pycache__/
 .venv/
 .pytest_cache/
+node_modules/
+package-lock.json
+.~lock.*

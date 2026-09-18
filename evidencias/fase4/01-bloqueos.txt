@@ -1,0 +1,12 @@
+===== CASO 1: fragmentado (user="'" pass="OR 1=1--") =====
+RASP ON : 403
+RASP OFF: {"status":"success","user":"*","note":"injection: full dump","rows":2}
+===== CASO 2: UNION (familia Fase 2) =====
+RASP ON : 403
+RASP OFF: {"status":"success","user":"*","note":"injection: full dump","rows":2}
+===== CASO 2b: ' OR '1'='1 string-form (hueco patron literal PDF) =====
+RASP ON : {"status":"success","user":"*","note":"injection: full dump","rows":2}
+RASP OFF: {"status":"success","user":"*","note":"injection: full dump","rows":2}
+===== legitimo =====
+RASP ON : 200
+RASP OFF: 200

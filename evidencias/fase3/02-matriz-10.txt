@@ -1,0 +1,16 @@
+etiqueta                          score   <-0.05   <0.0  esperado
+busqueda comun                   0.0287  normal  normal   normal 
+login valido                    -0.1024  ANOMALO ANOMALO  normal 
+home                            -0.1112  ANOMALO ANOMALO  normal 
+producto                        -0.0141  normal  ANOMALO  normal 
+score-board                     -0.0202  normal  ANOMALO  normal 
+SQLi clasico                    -0.0253  normal  ANOMALO  ataque 
+SQLi encoded (Fase 2)           -0.0845  ANOMALO ANOMALO  ataque 
+SQLi comentarios                -0.0428  normal  ANOMALO  ataque 
+evasion fragmentada (Fase 2)    -0.0095  normal  ANOMALO  ataque 
+XSS reflejado                   -0.0759  ANOMALO ANOMALO  ataque 
+
+--- Rafaga bot: 20 consultas rapidas (req_per_minute alto) ---
+req_per_minute=   5: score=+0.1571  anomalo(<-0.05)=False
+req_per_minute=  30: score=+0.1690  anomalo(<-0.05)=False
+req_per_minute= 120: score=+0.1690  anomalo(<-0.05)=False
