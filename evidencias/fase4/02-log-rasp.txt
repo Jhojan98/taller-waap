@@ -1,0 +1,2 @@
+RASP: consulta SQL bloqueada en tiempo de ejecucion: SELECT * FROM users WHERE user=''' AND pass='OR 1=1--'
+RASP: consulta SQL bloqueada en tiempo de ejecucion: SELECT * FROM users WHERE user='admin' UNION SELECT * FROM users--' AND pass='x'

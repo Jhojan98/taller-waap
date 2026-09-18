@@ -1,0 +1,8 @@
+{"ts": 1789774873.5973315, "layer": "reglas", "verdict": "bloqueado", "detail": "sqli-clasico"}
+{"ts": 1789774873.741382, "layer": "reglas", "verdict": "bloqueado", "detail": "xss"}
+{"ts": 1789774873.8654282, "layer": "rasp", "verdict": "bloqueado", "detail": "sqli-login"}
+{"ts": 1789774873.9682968, "layer": "ml", "verdict": "normal", "detail": "normal-busqueda score=+0.0287"}
+{"ts": 1789774873.9773054, "layer": "ml", "verdict": "anomalo", "detail": "normal-login score=-0.0811"}
+{"ts": 1789774873.9862258, "layer": "ml", "verdict": "anomalo", "detail": "atk-sqli score=-0.0253"}
+{"ts": 1789774873.996356, "layer": "ml", "verdict": "anomalo", "detail": "atk-frag score=-0.0095"}
+{"ts": 1789774874.0044205, "layer": "ml", "verdict": "anomalo", "detail": "atk-xss score=-0.0759"}

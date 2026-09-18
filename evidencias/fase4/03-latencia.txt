@@ -1,0 +1,13 @@
+HTTP end-to-end (30 reqs alternadas con warmup, login legitimo):
+RASP ON : n=30 media=2.39ms p50=1.41ms p95=8.14ms
+RASP OFF: n=30 media=3.70ms p50=1.54ms p95=8.50ms
+-> La diferencia ON-vs-OFF es ruido entre procesos (el regex es sub-microsegundo
+   frente a ~2ms de HTTP); ver microbenchmark.
+
+Microbenchmark en proceso (200k iteraciones, mismo patron SQLI_PATTERN del PDF):
+constructor solo : 0.0 micro-s/req
+con guard RASP  : 0.2 micro-s/req
+overhead real del guard: +0.1 micro-s/req
+Conclusion: overhead del RASP despreciable (~0.01% de la latencia HTTP). Coherente
+con el 1-4% reportado por OpenRASP en el peor caso (PDF p.6: limitacion real es el
+acoplamiento por servicio, no la latencia).

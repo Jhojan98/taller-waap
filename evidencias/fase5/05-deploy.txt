@@ -1,0 +1,6 @@
+[WAAP] PARANOIA=PARANOIA=1
+[WAAP] Recargando proxy (aplica reglas CRS + imagen vigente)...
+ Container taller-waap-juice-shop-1 Running 
+ Container taller-waap-waap-proxy-1 Running 
+[WAAP] Smoke test...
+[WAAP] Despliegue OK: normal=200, SQLi=403.

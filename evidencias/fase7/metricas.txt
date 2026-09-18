@@ -1,0 +1,11 @@
+capa               |  TPR   FPR   FNR
+reglas CRS PL1     | 78%  0%  22%   (TP=7 FN=2 FP=0 TN=5)
+IA/ML umbral 0.0   | 100%  80%  0%   (TP=9 FN=0 FP=4 TN=1)
+RASP fork (SQL)    | 67%  0%  33%   (TP=4 FN=2 FP=0 TN=5)
+
+MTTD simulado (tiempo-a-veredicto por capa):
+  CRS/sqli-clasico: 144.0 ms
+  CRS/xss: 124.0 ms
+  RASP/sqli-login: 61.5 ms
+
+OK logs/eventos.jsonl (8 eventos)
