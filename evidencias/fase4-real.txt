@@ -1,0 +1,14 @@
+===== legit jim =====
+oficial:3000 200
+fork+RASP:3001 200
+===== SQLi clasico email=' OR 1=1-- =====
+oficial:3000 {"authentication":{"token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJkYXRhIjp7ImlkIjoxLCJ1c2VybmFtZSI6IiIsImVtYWlsIjoiYWRtaW5AanVpY2Utc2gub3AiLCJwYXNzd29yZCI6IjAxOTIwMjNhN2JiZDczMjUwNTE2ZjA2OWRmMThiNTA
+fork+RASP:3001 403
+===== UNION =====
+oficial:3000 200
+fork+RASP:3001 403
+===== search SQLi (middleware global) =====
+oficial:3000 200
+fork+RASP:3001 200
+===== unit guard login (isSqlInjection, compilado) =====
+PASS x3: legitimo=false, OR 1=1=true, UNION=true

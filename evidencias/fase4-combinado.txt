@@ -1,0 +1,8 @@
+===== stack combinado WAAP(CRS) + fork RASP (compose con juice-shop:rasp-lab) =====
+NAME                       IMAGE                         COMMAND                  SERVICE      CREATED              STATUS                    PORTS
+taller-waap-juice-shop-1   juice-shop:rasp-lab           "/nodejs/bin/node /j…"   juice-shop   About a minute ago   Up About a minute         0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp
+taller-waap-waap-proxy-1   owasp/modsecurity-crs:nginx   "/docker-entrypoint.…"   waap-proxy   23 hours ago         Up 19 minutes (healthy)   0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp
+WAAP home :8080 -> 200
+legit login :3000 -> 200
+SQLi login :3000 -> 403 (RASP)
+SQLi search :8080 -> 403 (CRS)

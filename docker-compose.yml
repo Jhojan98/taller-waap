@@ -1,7 +1,10 @@
 services:
   juice-shop:
-    image: bkimminich/juice-shop:latest
+    image: juice-shop:rasp-lab # fork Jhojan98/juice-shop@rasp-lab con RASP Fase 4; oficial: bkimminich/juice-shop:latest
+    pull_policy: never # imagen construida localmente (docker build ~/juice-shop-rasp)
     platform: linux/amd64 # requerido en Mac ARM (M4); en Linux amd64 es no-op
+    environment:
+      RASP_ENABLED: "1" # 0 = desactiva RASP (control sin proteccion)
     ports:
       - "${JUICE_PORT:-3000}:3000"
     networks: [lab-net]
