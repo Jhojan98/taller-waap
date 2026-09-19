@@ -36,5 +36,7 @@ jobs:
         with:
           target: 'http://localhost:8080'
       - name: Despliegue de reglas WAAP (solo si todo pasa)
+        # El stack vive en el lab, no en el runner cloud: valida aqui, despliega alla.
+        continue-on-error: true
         if: success()
         run: ./scripts/deploy_waap_rules.sh
